@@ -1,0 +1,42 @@
+<h3>{{ title }}</h3>
+<br />
+<table class="table">
+  <tr>
+    <th>Index</th>
+    <th>Even/Odd</th>
+    <th>Room Number</th>
+    <th>Room Type</th>
+    <th>Room Price</th>
+    <th>Room Amenities</th>
+    <th>Check In Time</th>
+    <th>Check Out Time</th>
+    <th>Rating</th>
+    <th>Select Room</th>
+  </tr>
+  <tr
+    [ngClass]="e ? 'even' : 'odd'"
+    *ngFor="let room of rooms; let e = even; let o = odd; let i = index"
+  >
+    <td>{{ i }}</td>
+    <td>{{ e ? "Even" : "Odd" }}</td>
+    <td>{{ room.roomNumber }}</td>
+    <td>{{ room.roomType }}</td>
+    <td>{{ room.price | currency: " INR" }}</td>
+    <td>{{ room.amenities | titlecase }}</td>
+    <td>{{ room.checkinTime | date: "short" }}</td>
+    <td>{{ room.checkoutTime | date: "medium" }}</td>
+    <td>{{ room.rating | number: "1.0-0" }}</td>
+    <td>
+      <!-- <button class="btn btn-primary" (click)="selectRoom(room)">Select</button> -->
+      <!-- dynamic routerLink has to be in square brackets -->
+      <!-- the slash before room in the router link is to make the link start from
+      there and not append the link existing URL -->
+      <button
+        class="btn btn-primary"
+        [routerLink]="['/rooms', room.roomNumber]"
+      >
+        Book Room
+      </button>
+    </td>
+  </tr>
+</table>

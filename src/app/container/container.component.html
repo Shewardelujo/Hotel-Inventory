@@ -1,0 +1,10 @@
+<!-- for ng-content the content will be provided by the parent component -->
+
+<ng-content select="app-employee"></ng-content>
+
+<ng-content></ng-content>
+
+<ng-content select="app-rooms"></ng-content>
+
+<!-- and the component, that is the ts file can only access this in the
+ngAfterContentInit lifecycle method -->

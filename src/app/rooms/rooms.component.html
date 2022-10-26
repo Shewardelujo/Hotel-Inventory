@@ -1,0 +1,51 @@
+<!-- <h1>Welcome to {{ hotelName }}</h1>  -->
+<app-header></app-header>
+<!-- <app-header></app-header> -->
+
+<!-- this will unwrap the object and give you the data -->
+<!-- by unwrap it means async will unsubscribe to the data and give the data back to us  -->
+<!-- so when ngOnDestroy is called, asyncPipe unsubscribe to the data for us -->
+<!-- so we don't have to subscribe or unsubscribe -->
+<!-- {{ rooms$ | async | json }} -->
+
+<div [hidden]="hideRooms">
+  Number of Rooms:
+  <div
+    [ngStyle]="{ color: rooms.availableRooms ? 'steelBlue ' : 'red' }"
+    [innerText]="numberOfRooms"
+  ></div>
+  <!-- document.getElementById("numberOfRooms").innerText = numberOfRooms; -->
+</div>
+<br />
+<button (click)="toggle()">Toggle</button>
+<br />
+<button (click)="editRoom()">Edit Room</button>
+<br />
+
+<button (click)="deleteRoom()">Delete Room</button>
+
+<br /><br />
+
+<!-- {{ rooms?.availableRooms ?? "No rooms" }}
+<div *ngIf="rooms?.availableRooms"> -->
+<div *ngIf="selectedRoom">{{ selectedRoom | json }}</div>
+<div>
+  <button (click)="addRoom()">Add Room</button>
+</div>
+<!-- instead of doing multiple async pipe on the same stream, just assign it to a variable by using the "as" -->
+<!-- <h1>{{ getError$ | async }}</h1> -->
+<h1>Number of rooms: {{ roomsCount$ | async }}</h1>
+<div *ngIf="rooms$ | async as rooms">
+  <app-rooms-list
+    [rooms]="rooms"
+    [title]="title"
+    (selectedRoom)="selectRoom($event)"
+  ></app-rooms-list>
+  <!-- $event because the parent is subscribing to the event from the child component -->
+  <!-- $event is the emitted room -->
+</div>
+
+<!-- <div *ngIf="roomSpec.flowerVase > 0">
+  Right and Complete Flower Decor in place.
+</div> -->
+<h1>{{ totalBytes }} loaded</h1>

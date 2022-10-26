@@ -1,0 +1,245 @@
+<app-loader *ngIf="showSpinner"></app-loader>
+<div *ngIf="!showSpinner" class="content-wrapper">
+  <div class="content-body">
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+    <!-- User List -->
+    <section class="users-list-wrapper">
+      <!-- users filter end -->
+
+      <div class="card">
+        <div class="row my-5 mx-2">
+          <div
+            ngbDropdown
+            class="dropdown col-md-6 col-12"
+            #discountDropdown="ngbDropdown"
+          >
+            <div class="d-flex align-on-mobile">
+              <button
+                style="height: 10%"
+                class="btn btn-outline-primary align-on-mobile-space"
+                id="dropdownMenuButton"
+                role="button"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                ngbDropdownToggle
+              >
+                Filter By<span
+                  class="datatable-icon-sort-unset sort-btn"
+                ></span>
+              </button>
+              <div class="form-group text-md-right has-search ml-md-4 col-md-6">
+                <span class="fa fa-search form-control-feedback"></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search saver, account number or reason"
+                />
+              </div>
+            </div>
+
+            <div
+              ngbDropdownMenu
+              class="dropdown-menu item-options-menu p-1 col-5"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <form (ngSubmit)="setupPagination('/getpaged')">
+                <div class="row">
+                  <div class="form-group col-6">
+                    <label class="control-label">Start Date</label>
+                    <input
+                      type="date"
+                      class="date-picker form-control"
+                      name="dateCreatedFrom"
+                      id="date-picker"
+                      #dateCreatedFrom="ngModel"
+                      [(ngModel)]="filter.dateCreatedFrom"
+                      required
+                    />
+                  </div>
+                  <div class="form-group col-6">
+                    <label class="control-label">End Date</label>
+                    <input
+                      type="date"
+                      class="date-picker form-control"
+                      name="dateCreatedTo"
+                      id="date-picker"
+                      #dateCreatedTo="ngModel"
+                      [(ngModel)]="filter.dateCreatedTo"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="row mb-0">
+                  <div class="col-12 border-bottom">
+                    <!-- <input type="checkbox" name="checkbox" class="mb-1 mr-1" value="5" id="checkbox"> -->
+                    <input
+                      id="checkbox"
+                      type="checkbox"
+                      name="save"
+                      [(ngModel)]="isChecked"
+                    />
+                    <label>Save as default filter</label>
+                  </div>
+                </div>
+                <div class="dropdown-divider my-1"></div>
+                <div class="d-flex justify-content-between">
+                  <button
+                    (click)="resetFiltering('')"
+                    class="btn btn-default btn-outline-secondary"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type="submit"
+                    id="paginationBtn"
+                    class="btn btn-primary bg-color"
+                  >
+                    Filter
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12 text-md-right">
+            <span class="btn btn-primary small" (click)="export()">
+              <i class="fa fa-download fa-fw"></i> Export Excel
+            </span>
+            <span
+              class="text mx-2"
+              (click)="resetFiltering('/getpaged')"
+              role="button"
+              ><i data-feather="refresh-ccw" [size]="'20px'"></i
+            ></span>
+            <!-- <span class="text" role="button" (click)="toggleSidebar()"><i data-feather="plus"
+                [size]="'20px'"></i></span> -->
+          </div>
+        </div>
+
+        <div id="DataTable">
+          <div id="table_box_bootstrap"></div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Subject</th>
+                <th>Email Address</th>
+                <th>Status</th>
+                <th>Date Sent</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="scroll-pane">
+              <tr
+                *ngFor="
+                  let row of rows
+                    | paginate
+                      : {
+                          itemsPerPage: paginationConfig.pageSize,
+                          currentPage: paginationConfig.page,
+                          totalItems: paginationConfig.total
+                        };
+                  let i = index
+                "
+              >
+                <td>{{ getIndexSeed(i) }}</td>
+                <td>
+                  <span role="button" (click)="copyText(row.subject)">
+                    {{ transform(row.subject, 20) }}
+                    <span data-feather="clipboard"></span>
+                  </span>
+                </td>
+                <!-- <td>{{ row.subject }}</td> -->
+                <td>
+                  {{ row.receipients }}
+                </td>
+                <td>
+                  <div>
+                    <div class="badge badge-success">{{ row.statusName }}</div>
+                  </div>
+                </td>
+                <td>
+                  {{
+                    row.dateSent !== null ? (row.dateSent | date: "medium") : ""
+                  }}
+                </td>
+
+                <td>
+                  <a role="button" (click)="toggle(row.emailLogId)">
+                    <i data-feather="eye" class="mr-1"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="paginate row m-0" *ngIf="rows.length !== 0">
+          <div class="col-md-5">
+            {{ getPageInfoDescription() }}
+          </div>
+          <div class="col-md-7 text-right">
+            <nav aria-label="Page navigation example" *ngIf="rows.length !== 0">
+              <pagination-controls
+                (pageChange)="pageChanged($event, '/querypaged')"
+                autoHide="false"
+                nextLabel=""
+                previousLabel=""
+              >
+              </pagination-controls>
+            </nav>
+          </div>
+        </div>
+
+        <ngb-alert [type]="'danger'" [dismissible]="false" *ngIf="error">
+          <div class="alert-body">
+            <p>{{ error }}</p>
+          </div>
+        </ngb-alert>
+        <ngb-alert [type]="'success'" [dismissible]="false" *ngIf="success">
+          <div class="alert-body">
+            <p>{{ success }}</p>
+          </div>
+        </ngb-alert>
+        <div class="row">
+          <div class="col-md-6 col-12">
+            <div class="d-flex justify-content-between align-items-center m-1">
+              <label class="d-flex align-items-center"
+                >Show
+                <select
+                  class="form-control mx-25"
+                  name="pageSize"
+                  #pageSize="ngModel"
+                  [(ngModel)]="paginationConfig.pageSize"
+                  (change)="
+                    pageSizeChanged(paginationConfig.pageSize, '/querypaged')
+                  "
+                >
+                  <option *ngFor="let item of pageSizes" value="{{ item.id }}">
+                    {{ item.name }}
+                  </option>
+                </select>
+                entries</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--/ User List -->
+  </div>
+
+  <!-- New User Sidebar -->
+  <core-sidebar
+    class="modal modal-slide-in sidebar-todo-modal fade"
+    name="faq-sidebar"
+    overlayClass="modal-backdrop"
+  >
+    <app-email-templates-details
+      (reload)="reload($event)"
+    ></app-email-templates-details>
+  </core-sidebar>
+  <!--/ New User Sidebar -->
+</div>
