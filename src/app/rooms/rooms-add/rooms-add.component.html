@@ -1,10 +1,18 @@
-{{ room | json }}
+<!-- {{ room | json }} -->
+{{ roomsForm.valid | json }}
+{{ roomsForm.invalid | json }}
+{{ roomsForm.pristine | json }}
+{{ roomsForm.dirty | json }}
+{{ roomsForm.value | json }}
 
-<div class="alert alert-success">{{ successMessage }}</div>
-<form (ngSubmit)="AddRoom()">
+<div *ngIf="successMessage !== ''" class="alert alert-success">
+  {{ successMessage }}
+</div>
+<form #roomsForm="ngForm" (ngSubmit)="AddRoom(roomsForm)">
   <!-- form group and form control is from bootstrap for spacing -->
   <div class="form-group">
     <input
+      required
       type="text"
       class="form-control"
       name="roomType"
@@ -12,17 +20,41 @@
       [(ngModel)]="room.roomType"
     />
   </div>
+  <!-- <div class="form-group">
+    <input
+      email
+      required
+      type="text"
+      class="form-control"
+      name="roomType"
+      placeholder="Room Type"
+      [(ngModel)]="room.roomType"
+    />
+    <div>{{ roomAmenities.errors | json }}</div>
+  </div> -->
   <div class="form-group">
     <input
+      #roomAmenities="ngModel"
+      required
+      minlength="5"
+      maxlength="20"
       type="text"
       class="form-control"
       name="amenities"
       placeholder="Amenities"
       [(ngModel)]="room.amenities"
     />
+    <!-- <div>{{ roomAmenities.errors | json }}</div> -->
+    <div class="alert alert-danger" *ngIf="roomAmenities.errors?.['minlength']">
+      Amenities should be min 5 chars!
+    </div>
+    <div *ngIf="roomAmenities.dirty && roomAmenities.errors?.['required']">
+      Please provide the amenities
+    </div>
   </div>
   <div class="form-group">
     <input
+      required
       type="number"
       class="form-control"
       name="price"
@@ -32,6 +64,7 @@
   </div>
   <div class="form-group">
     <input
+      required
       type="text"
       class="form-control"
       name="photos"
@@ -50,6 +83,7 @@
   </div>
   <div class="form-group">
     <input
+      required
       type="datetime"
       class="form-control"
       name="checkoutTime"
@@ -59,6 +93,9 @@
   </div>
   <div class="form-group">
     <input
+      min="1"
+      max="5"
+      required
       type="number"
       class="form-control"
       name="rating"
@@ -67,6 +104,16 @@
     />
   </div>
   <div class="form-group">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button
+      [disabled]="roomsForm.invalid"
+      type="submit"
+      class="btn btn-primary"
+    >
+      Submit
+    </button>
   </div>
 </form>
+
+<!-- pristine is available on forms and in controls  -->
+<!-- pristine signifies not touched, fresh -->
+<!-- dirty signifies touched -->
