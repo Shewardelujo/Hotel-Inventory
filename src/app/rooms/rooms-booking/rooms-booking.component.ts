@@ -14,9 +14,11 @@ export class RoomsBookingComponent implements OnInit {
   // id$ = this.router.params.pipe(map((params) => params['roomId']));
   //paramMap is the option when you have multiple parameters
   id$ = this.router.paramMap.pipe(map((params) => params.get('roomId')));
+
   constructor(private router: ActivatedRoute) {}
 
   ngOnInit(): void {
+    // console.log(this.id$);
     // this.router.params.subscribe((params) => {
     // this.id = params['roomId'];
     //params is an object with the its property has declared in the dynamic route in app routing module

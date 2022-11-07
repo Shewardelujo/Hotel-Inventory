@@ -1,3 +1,4 @@
+import { LoginComponent } from './login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EmployeeComponent } from './employee/employee.component';
@@ -7,13 +8,15 @@ import { RoomsBookingComponent } from './rooms/rooms-booking/rooms-booking.compo
 import { RoomsComponent } from './rooms/rooms.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/rooms', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   //the default pathMatch is 'prefix' and checks from the left to see the match
   { path: 'employee', component: EmployeeComponent },
   { path: 'rooms', component: RoomsComponent },
   { path: 'rooms/add', component: RoomsAddComponent },
   //DYNAMIC ROUTE
   { path: 'rooms/:roomId', component: RoomsBookingComponent },
+  { path: 'login', component: LoginComponent },
+
   //WILD CARD ROUTE
   { path: '**', component: NotFoundComponent },
 ];
