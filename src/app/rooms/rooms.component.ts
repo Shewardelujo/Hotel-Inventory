@@ -1,5 +1,4 @@
 import { HttpEventType } from '@angular/common/http';
-import { makeBindingParser } from '@angular/compiler';
 import {
   AfterViewChecked,
   AfterViewInit,
