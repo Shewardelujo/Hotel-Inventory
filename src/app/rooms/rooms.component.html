@@ -30,7 +30,7 @@
 <div *ngIf="rooms?.availableRooms"> -->
 <div *ngIf="selectedRoom">{{ selectedRoom | json }}</div>
 <div>
-  <button (click)="addRoom()">Add Room</button>
+  <button routerLink="add">Add Room</button>
 </div>
 <!-- instead of doing multiple async pipe on the same stream, just assign it to a variable by using the "as" -->
 <!-- <h1>{{ getError$ | async }}</h1> -->
@@ -49,3 +49,5 @@
   Right and Complete Flower Decor in place.
 </div> -->
 <h1>{{ totalBytes }} loaded</h1>
+
+<router-outlet></router-outlet>
