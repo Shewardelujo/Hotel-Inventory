@@ -1,3 +1,4 @@
+import { ConfigService } from './services/config.service';
 import {
   Component,
   ViewChild,
@@ -10,6 +11,8 @@ import { localStorageToken } from './localstorage.token';
 import { LoggerService } from './logger.service';
 // import { RoomsComponent } from './rooms/rooms.component';
 import { InitService } from './init.service';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +29,9 @@ export class AppComponent implements OnInit {
   constructor(
     @Optional() private loggerService: LoggerService,
     @Inject(localStorageToken) private localStorage: Storage,
-    private initService: InitService
+    private initService: InitService,
+    private ConfigService: ConfigService,
+    private router: Router
   ) {
     console.log(initService.config);
   }
@@ -47,6 +52,21 @@ export class AppComponent implements OnInit {
   //ElementRef enables us to dynamically load an element, in this case a div
   @ViewChild('name', { static: true }) name!: ElementRef;
   ngOnInit(): void {
+    //we subscribe to observables
+    // this.router.events.subscribe((event) => {
+    //   console.log(event);
+    // });
+    //filtering out the other events using rxjs
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationStart))
+      .subscribe((event) => {
+        console.log('Navigation Started');
+      });
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        console.log('Navigation Ended');
+      });
     this.loggerService?.log('AppComponent.ngOnInit()');
 
     this.name.nativeElement.innerText = 'Hilton Hotel';
