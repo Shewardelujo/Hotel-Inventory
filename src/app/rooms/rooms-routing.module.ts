@@ -1,3 +1,4 @@
+import { RoomGuard } from './guards/room.guard';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoomsAddComponent } from './rooms-add/rooms-add.component';
@@ -12,6 +13,7 @@ const routes: Routes = [
 
     component: RoomsComponent,
     //children is useful for nested routing
+    canActivateChild: [RoomGuard],
     children: [
       //add normal routes before dynamic routes
       { path: 'add', component: RoomsAddComponent },
