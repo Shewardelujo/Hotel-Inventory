@@ -6,7 +6,10 @@ import { RoomsComponent } from './rooms.component';
 
 const routes: Routes = [
   {
-    path: 'rooms',
+    path: '',
+    // path: ' ',
+    // path: 'rooms',   if we weren't lazy loading it
+
     component: RoomsComponent,
     //children is useful for nested routing
     children: [

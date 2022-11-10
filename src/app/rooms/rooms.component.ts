@@ -1,3 +1,4 @@
+import { ConfigService } from './../services/config.service';
 import { HttpEventType } from '@angular/common/http';
 import {
   AfterViewChecked,
@@ -101,7 +102,10 @@ export class RoomsComponent
   //roomService = new RoomService(); this is how to directly create a class instance
 
   //You don't have to do SkipSelf, because an
-  constructor(@SkipSelf() private roomsService: RoomsService) {
+  constructor(
+    @SkipSelf() private roomsService: RoomsService,
+    private ConfigService: ConfigService
+  ) {
     //the services should always be private else you will be able to access it from the html TEMPLATE, which shouldn't be, it should only be accessible from the ts file
   }
 

@@ -10,6 +10,12 @@ const routes: Routes = [
   { path: 'employee', component: EmployeeComponent },
 
   { path: 'login', component: LoginComponent },
+  {
+    path: 'rooms',
+    loadChildren: () =>
+      import('./rooms/rooms.module').then((m) => m.RoomsModule),
+  },
+  { path: 'booking', loadChildren: () => import('./booking/booking.module').then(m => m.BookingModule) },
 
   //WILD CARD ROUTE
   { path: '**', component: NotFoundComponent },
