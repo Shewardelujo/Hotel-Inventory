@@ -15,14 +15,14 @@ const routes: Routes = [
     path: 'rooms',
     loadChildren: () =>
       import('./rooms/rooms.module').then((m) => m.RoomsModule),
-    canActivate: [LoginGuard],
-    canLoad: [LoginGuard],
+    // canActivate: [LoginGuard],
+    // canLoad: [LoginGuard],
   },
   {
     path: 'booking',
     loadChildren: () =>
       import('./booking/booking.module').then((m) => m.BookingModule),
-    canActivate: [LoginGuard],
+    // canActivate: [LoginGuard],
   },
 
   //WILD CARD ROUTE

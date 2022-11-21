@@ -36,8 +36,6 @@
     <input
       #roomAmenities="ngModel"
       required
-      minlength="5"
-      maxlength="20"
       type="text"
       class="form-control"
       name="amenities"
@@ -45,9 +43,10 @@
       [(ngModel)]="room.amenities"
     />
     <!-- <div>{{ roomAmenities.errors | json }}</div> -->
-    <div class="alert alert-danger" *ngIf="roomAmenities.errors?.['minlength']">
+    <!-- <div class="alert alert-danger" *ngIf="roomAmenities.errors?.['minlength']">
       Amenities should be min 5 chars!
-    </div>
+    </div> -->
+    {{ roomAmenities.errors | json }}
     <div *ngIf="roomAmenities.dirty && roomAmenities.errors?.['required']">
       Please provide the amenities
     </div>

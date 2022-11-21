@@ -1,1 +1,9 @@
 <p>booking works!</p>
+<!-- {{ bookingForm.value | json }}
+{{ bookingForm.pristine | json }}
+{{ bookingForm.dirty | json }} -->
+
+<!-- we have to tell the file that you don't have to create a new form, because we
+have done that already, how do we do that? using [formGroup] = bookingForm -->
+<!-- so, we are saying that we have already created this form, just go ahead and bind it -->
+<form [formGroup]="bookingForm"></form>
