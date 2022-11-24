@@ -20,8 +20,11 @@ export class HoverDirective {
   ngOnInit(): void {
     // this.element.nativeElement.style.backgroundColor = this.color;
     this.renderer.setStyle(
+      //the element
       this.element.nativeElement,
+      //the property
       'backgroundColor',
+      //the value
       this.appHover
     );
   }

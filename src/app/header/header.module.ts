@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   declarations: [HeaderComponent],
   imports: [CommonModule],
   exports: [HeaderComponent],
-  //since HeaderComponent is used in another module, then you have to export it.
+  //since HeaderComponent is used by another component in another module, then you have to export it.
 })
 export class HeaderModule {}
 

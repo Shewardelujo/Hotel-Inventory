@@ -28,7 +28,7 @@ export class RoomsService {
   //   .pipe(shareReplay(1));
   getRooms$ = this.http.get<RoomList[]>('/api/rooms ').pipe(shareReplay(1));
   // getRooms$ = this.http
-  // .get<RoomList[]>('/api/rooms ', { headers: this.headers }).pipe(
+  // .get<RoomList[]>('/api/rooms ', { headers: this.headers }). (
   //shareReplay operator... shareReplay()
   // shareReplay(1)
   //this means that we are replaying the last one record which we have received
