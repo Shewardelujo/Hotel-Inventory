@@ -1,3 +1,4 @@
+import { BookingService } from './booking.service';
 import { ConfigService } from './../services/config.service';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -7,6 +8,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { exhaustMap, mergeMap, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-booking',
@@ -23,68 +25,92 @@ export class BookingComponent implements OnInit {
     return this.bookingForm.get('guests') as FormArray; // this is so that we can easily access this in the addGuest function
   }
 
-  constructor(private configService: ConfigService, private fb: FormBuilder) {}
+  constructor(
+    private configService: ConfigService,
+    private fb: FormBuilder,
+    private bookingService: BookingService
+  ) {}
 
   ngOnInit(): void {
-    this.bookingForm = this.fb.group(
-      {
-        //[''] is a shortcut to new FormControl('')
-        roomId: new FormControl('', { validators: [Validators.required] }),
-        // roomId: new FormControl({value: '2', disabled: true}, {validators: [Validators.required]}),
-        guestEmail: [
-          '',
-          {
-            updateOn: 'blur',
-            validators: [Validators.required, Validators.email],
-          },
-        ],
-        checkinDate: [''],
-        checkoutDate: [''],
-        bookingStatus: [''],
-        bookingAmount: [''],
-        bookingDate: [''],
-        mobileNumber: [
-          '',
-          {
-            updateOn: 'blur',
-            //so blur is an event that should be called when you move out of a control
-          },
-        ],
-        guestName: ['', [Validators.required, Validators.minLength(5)]],
-        //nested form
-        address: this.fb.group({
-          addressLine1: ['', { validators: [Validators.required] }],
-          addressLine2: [''],
-          city: ['', { validators: [Validators.required] }],
-          state: ['', { validators: [Validators.required] }],
-          country: [''],
-          zipCode: [''],
+    this.bookingForm = this.fb.group({
+      //[''] is a shortcut to new FormControl('')
+      roomId: new FormControl('', { validators: [Validators.required] }),
+      // roomId: new FormControl({value: '2', disabled: true}, {validators: [Validators.required]}),
+      guestEmail: [
+        '',
+        {
+          updateOn: 'blur',
+          validators: [Validators.required, Validators.email],
+        },
+      ],
+      checkinDate: [''],
+      checkoutDate: [''],
+      bookingStatus: [''],
+      bookingAmount: [''],
+      bookingDate: [''],
+      mobileNumber: [
+        '',
+        {
+          updateOn: 'blur',
+          //so blur is an event that should be called when you move out of a control
+          // can be blur, change or submit... it is change by default... submit is useful when you don't have validation error or want to validate upon submission
+        },
+      ],
+      guestName: ['', [Validators.required, Validators.minLength(5)]],
+      //nested form
+      address: this.fb.group({
+        addressLine1: ['', { validators: [Validators.required] }],
+        addressLine2: [''],
+        city: ['', { validators: [Validators.required] }],
+        state: ['', { validators: [Validators.required] }],
+        country: [''],
+        zipCode: [''],
+      }),
+      //this.fb.array([]), we are providing an array of controls. where a button can be used to add a form.. it won't be a nested form but nested array of form
+      //nested array of forms
+      // guests: this.fb.array([this.addGuestControl()]),
+      guests: this.fb.array([
+        this.fb.group({
+          guestName: ['', { validators: [Validators.required] }],
+          age: new FormControl(''),
         }),
-        //this.fb.array([]), we are providing an array of controls. where a button can be used to add a form.. it won't be a nested form but nested array of form
-        //nested array of forms
-        // guests: this.fb.array([this.addGuestControl()]),
-        guests: this.fb.array([
-          this.fb.group({
-            guestName: ['', { validators: [Validators.required] }],
-            age: new FormControl(''),
-          }),
-        ]),
+      ]),
 
-        tnc: new FormControl(false, { validators: [Validators.requiredTrue] }),
-      },
-      { update: 'blur' } // can be blur, change or submit... it is change by default... submit is useful when you don't have validation error or want to validate upon submission
-    );
+      tnc: new FormControl(false, { validators: [Validators.requiredTrue] }),
+    });
     // this.getBookingData()
 
     //USE TO LISTEN TO CHANGES IN THE VALUE... and it will be called for each key press.. a way to avoid this is change the default value of updateOn to blur from change
-    this.bookingForm.valueChanges.subscribe((data) => {
-      console.log(data);
-    });
+    // this.bookingForm.valueChanges.subscribe((data) => {
+    //   // console.log(data);
+    //   this.bookingService.bookRoom(data).subscribe((data) => {});
+    // });
+
+    //MERGEMAP DOES NOT CARE ABOUT THE SEQUENCE, AS SOON AS IT GETS THE DATA, A STREAM IS EMITTED
+    //   this.bookingForm.valueChanges
+    //     .pipe(mergeMap((data) => this.bookingService.bookRoom(data)))
+    //     .subscribe((data) => console.log(data));
+    // }
+
+    //SWITCHMAP will cancel a new request, if it streams a new data
+    // this.bookingForm.valueChanges
+    //   .pipe(switchMap((data) => this.bookingService.bookRoom(data)))
+    //   .subscribe((data) => console.log(data));
+
+    //MERGEMAP CAREs ABOUT THE SEQUENCE, A STREAM IS ONLY EMITTED WHEN THE REQUEST IS COMPLETED
+
+    this.bookingForm.valueChanges
+      .pipe(exhaustMap((data) => this.bookingService.bookRoom(data)))
+      .subscribe((data) => console.log(data));
   }
 
   addBooking() {
     console.log(this.bookingForm.value);
     //console.log(this.bookingForm.getRawValue); gives us values of even the form controls that are disabled
+
+    // this.bookingService
+    //   .bookRoom(this.bookingForm.getRawValue())
+    //   .subscribe((data) => console.log(data));
 
     //TO RESET
     // this.bookingForm.reset()
