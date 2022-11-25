@@ -58,6 +58,10 @@ have done that already, how do we do that? using [formGroup] = bookingForm -->
       formControlName="guestName"
       placeholder="Provide an Name "
     />
+    <!-- {{ bookingForm.get("guestName")?.errors | json }} -->
+    <mat-error *ngIf="bookingForm.get('guestName')?.hasError('minlength')">
+      Guest Name should be minimum of 5 characters
+    </mat-error>
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <mat-label>Guest Email </mat-label>
@@ -90,25 +94,28 @@ have done that already, how do we do that? using [formGroup] = bookingForm -->
   <mat-form-field class="example-full-width">
     <mat-label>Checkin Date </mat-label>
     <input matInput [matDatepicker]="picker" formControlName="checkinDate" />
-    <mat-hint>MM/DD/YYYY</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field class="example-full-width">
     <mat-label>Checkout Date </mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="checkoutDate" />
-    <mat-hint>MM/DD/YYYY</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+    <input matInput [matDatepicker]="picker1" formControlName="checkoutDate" />
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="picker1"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #picker1></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field class="example-full-width">
     <mat-label>Booking Date </mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="bookingDate" />
-    <mat-hint>MM/DD/YYYY</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+    <input matInput [matDatepicker]="picker2" formControlName="bookingDate" />
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="picker2"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #picker2></mat-datepicker>
   </mat-form-field>
 
   <br />
@@ -126,6 +133,13 @@ have done that already, how do we do that? using [formGroup] = bookingForm -->
             formControlName="addressLine1"
             placeholder="Address Line1"
           />
+          <mat-error
+            *ngIf="
+              bookingForm.get('address.addressLine1')?.hasError('required')
+            "
+          >
+            Address Line 1 is required
+          </mat-error>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input
@@ -195,6 +209,16 @@ have done that already, how do we do that? using [formGroup] = bookingForm -->
                 formControlName="guestName"
                 placeholder="Guest Name"
               />
+              <!-- THIS IS HOW YOU CAN DISPLAY ERROR FOR A FORM ARRAY CONTROL -->
+              <mat-error
+                *ngIf="
+                  bookingForm
+                    .get(['guests', i, 'guestName'])
+                    ?.hasError('required')
+                "
+              >
+                Guest Name is required
+              </mat-error>
             </mat-form-field>
             <mat-form-field class="example-full-width">
               <input
@@ -220,7 +244,20 @@ have done that already, how do we do that? using [formGroup] = bookingForm -->
     </mat-accordion>
   </div>
   <!-- FORM ARRAY ENDS -->
+  <div>
+    <mat-checkbox class="example-margin" formControlName="tnc"
+      >TnC</mat-checkbox
+    >
+  </div>
   <div class="mt-4">
-    <button mat-raised-button color="primary" type="button">Book Room</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      [disabled]="bookingForm.invalid"
+      (click)="addBooking()"
+    >
+      Book Room
+    </button>
   </div>
 </form>
