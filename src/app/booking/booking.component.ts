@@ -1,6 +1,12 @@
 import { ConfigService } from './../services/config.service';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-booking',
@@ -22,45 +28,88 @@ export class BookingComponent implements OnInit {
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
       //[''] is a shortcut to new FormControl('')
-      roomId: new FormControl(''),
-      // roomId: new FormControl({value: '2', disabled: true}),
-      guestEmail: [''],
+      roomId: new FormControl('', { validators: [Validators.required] }),
+      // roomId: new FormControl({value: '2', disabled: true}, {validators: [Validators.required]}),
+      guestEmail: ['', [Validators.required, Validators.email]],
       checkinDate: [''],
       checkoutDate: [''],
       bookingStatus: [''],
       bookingAmount: [''],
       bookingDate: [''],
       mobileNumber: [''],
-      guestName: [''],
+      guestName: ['', [Validators.required, Validators.minLength(5)]],
       //nested form
       address: this.fb.group({
-        addressLine1: [''],
+        addressLine1: ['', { validators: [Validators.required] }],
         addressLine2: [''],
-        city: [''],
-        state: [''],
+        city: ['', { validators: [Validators.required] }],
+        state: ['', { validators: [Validators.required] }],
         country: [''],
         zipCode: [''],
       }),
       //this.fb.array([]), we are providing an array of controls. where a button can be used to add a form.. it won't be a nested form but nested array of form
       //nested array of forms
-      guests: this.fb.array([this.addGuestControl()]),
+      // guests: this.fb.array([this.addGuestControl()]),
+      guests: this.fb.array([
+        this.fb.group({
+          guestName: ['', { validators: [Validators.required] }],
+          age: new FormControl(''),
+        }),
+      ]),
+
+      tnc: new FormControl(false, { validators: [Validators.requiredTrue] }),
     });
   }
 
   addBooking() {
     console.log(this.bookingForm.value);
     //console.log(this.bookingForm.getRawValue); gives us values of even the form controls that are disabled
+
+    //TO RESET
+    // this.bookingForm.reset()
+    this.bookingForm.reset({
+      roomId: 2,
+
+      guestEmail: '',
+      checkinDate: '',
+      checkoutDate: '',
+      bookingStatus: '',
+      bookingAmount: '',
+      bookingDate: '',
+      mobileNumber: '',
+      guestName: '',
+      //nested form
+      address: {
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        state: '',
+        country: '',
+        zipCode: '',
+      },
+      //this.fb.array([]), we are providing an array of controls. where a button can be used to add a form.. it won't be a nested form but nested array of form
+      //nested array of forms
+      guests: [],
+      tnc: false,
+    });
   }
 
   addGuest() {
     this.guests.push(
       //push because we have set guest as a FormArray
       //either pushes a control or a group(an object)
-      this.addGuestControl()
+      // this.addGuestControl()
+      this.fb.group({
+        guestName: ['', { validators: [Validators.required] }],
+        age: new FormControl(''),
+      })
     );
   }
   addGuestControl() {
-    this.fb.group({ guestName: [''], age: new FormControl('') });
+    this.fb.group({
+      guestName: ['', { validators: [Validators.required] }],
+      age: new FormControl(''),
+    });
   }
   addPassport() {
     this.bookingForm.addControl('passport', new FormControl(''));
