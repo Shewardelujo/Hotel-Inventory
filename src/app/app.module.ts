@@ -1,3 +1,4 @@
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -55,6 +56,7 @@ function initFactory(initService: InitService) {
     MatListModule,
     FormsModule,
     HeaderModule,
+    MatSnackBarModule,
   ], //though we can import a module in multiple module.ts file
   //but we can't declare a component in the declarations of multiple modules
   providers: [
