@@ -14,6 +14,7 @@ import { catchError, Observable, of, Subject, Subscription, map } from 'rxjs';
 import { HeaderComponent } from '../header/header.component';
 import { Room, EachRoom, RoomList } from './rooms';
 import { RoomsService } from './services/rooms.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-rooms',
@@ -41,7 +42,7 @@ export class RoomsComponent
     flowerVase: 3,
     flowerType: 'hibiscus',
   };
-
+  initValue: any = 0;
   roomList: RoomList[] = [];
   //@ViewChild is creating a new instance of our header component in the rooms component and can be accessed here and modified etc in this ts file.
   //@ViewChild can only be accessed in ngAfterViewInit, but if we want to be able to access it elsewhere then you have to make static true, which by default is false
@@ -96,6 +97,9 @@ export class RoomsComponent
       // meaning return an empty array
     })
   );
+
+  priceFilter = new FormControl<any>(this.initValue);
+
   roomsCount$ = this.roomsService.getRooms$.pipe(map((rooms) => rooms.length));
 
   //Dependency injection says don't create an instance of a class directly

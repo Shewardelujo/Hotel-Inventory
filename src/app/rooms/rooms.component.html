@@ -41,11 +41,23 @@
   <!-- instead of doing multiple async pipe on the same stream, just assign it to a variable by using the "as" -->
   <!-- <h1>{{ getError$ | async }}</h1> -->
 
+  {{ priceFilter | json }}
+  <!-- {{ priceFilter.value | json }} -->
+  <div>
+    <input
+      type="number"
+      class="form-control"
+      placeholder="Price"
+      [formControl]="priceFilter"
+    />
+  </div>
+
   <!-- <h1>Number of rooms: {{ roomsCount$ | async }}</h1> -->
   <div *ngIf="rooms$ | async as rooms">
     <app-rooms-list
       [rooms]="rooms"
       [title]="title"
+      [price]="priceFilter.value"
       (selectedRoom)="selectRoom($event)"
     ></app-rooms-list>
     <!-- $event because the parent is subscribing to the event from the child component -->
