@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'add', component: RoomsAddComponent },
 
       //DYNAMIC ROUTE
-      { path: ':roomId', component: RoomsBookingComponent },
+      // { path: ':roomId', component: RoomsBookingComponent },
     ],
   },
   // { path: 'rooms/add', component: RoomsAddComponent },

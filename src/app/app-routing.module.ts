@@ -18,8 +18,14 @@ const routes: Routes = [
     // canActivate: [LoginGuard],
     // canLoad: [LoginGuard],
   },
+  // {
+  //   path: 'booking',
+  //   loadChildren: () =>
+  //     import('./booking/booking.module').then((m) => m.BookingModule),
+  // canActivate: [LoginGuard],
+  // },
   {
-    path: 'booking',
+    path: 'booking/:id',
     loadChildren: () =>
       import('./booking/booking.module').then((m) => m.BookingModule),
     // canActivate: [LoginGuard],
