@@ -18,17 +18,22 @@ const routes: Routes = [
     // canActivate: [LoginGuard],
     // canLoad: [LoginGuard],
   },
-  // {
-  //   path: 'booking',
-  //   loadChildren: () =>
-  //     import('./booking/booking.module').then((m) => m.BookingModule),
-  // canActivate: [LoginGuard],
-  // },
   {
-    path: 'booking/:id',
+    path: 'booking',
     loadChildren: () =>
       import('./booking/booking.module').then((m) => m.BookingModule),
-    // canActivate: [LoginGuard],
+    canActivate: [LoginGuard],
+  },
+  // {
+  //   path: 'booking/:id',
+  //   loadChildren: () =>
+  //     import('./booking/booking.module').then((m) => m.BookingModule),
+  //   // canActivate: [LoginGuard],
+  // },
+  {
+    path: 'comments',
+    loadChildren: () =>
+      import('./comment/comment.module').then((m) => m.CommentModule),
   },
 
   //WILD CARD ROUTE
