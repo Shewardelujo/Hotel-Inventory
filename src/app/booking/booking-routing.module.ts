@@ -5,7 +5,7 @@ import { BookingComponent } from './booking.component';
 
 const routes: Routes = [
   { path: '', component: BookingComponent, canDeactivate: [BookingGuard] },
-  // { path: ':id', component: BookingComponent },
+  { path: ':id', component: BookingComponent, canDeactivate: [BookingGuard] },
 ];
 
 @NgModule({
